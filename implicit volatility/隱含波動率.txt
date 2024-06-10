@@ -1,0 +1,32 @@
+#python 程式碼
+#牛頓法計算隱含波動率
+import numpy as np
+from numpy import log as ln  #方便用natural log
+import math
+i=1
+n=100 #圈數
+p0=1  #起始值
+tol=0.01  #tolerance
+s=70
+k=75
+r=0.07
+t=150/365
+from scipy.stats import norm
+def dn(d):
+    dn_d=math.exp((-0.5)*d**2)/(np.sqrt(2*np.pi))
+    dn_d=float(dn_d)
+    return dn_d
+def f(sigma):
+    d1=(ln(s/k)+(r+(sigma**2)/2)*t)/(sigma*(t**0.5))
+    d2=(ln(s/k)+(r-(sigma**2)/2)*t)/(sigma*(t**0.5))
+    c=s*norm.cdf(d1)-k*math.exp(-r*t)*norm.cdf(d2)
+    return c
+while i<=n:
+    d1=(ln(s/k)+(r+(p0**2)/2)*t)/(p0*(t**0.5))
+    vega=s*t**0.5**dn(d1)
+    c=f(p0)
+    p=p0-f(p0)/vega
+    if abs(p-p0)<tol:break
+    else :
+        i=i+1
+        p0=p
